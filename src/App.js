@@ -5,18 +5,24 @@ import SafeSection from './components/SafeSection';
 import HomeScreen from './components/HomeScreen';
 
 function App() {
-  // State to control which section is visible ('home', 'malicious', or 'safe')
   const [visibleSection, setVisibleSection] = useState('home');
+  const [capturedImage, setCapturedImage] = useState(null);
 
-  // Function to render the correct section based on the state
+  const handleNavigate = (section, image) => {
+    setVisibleSection(section);
+    if (image) {
+      setCapturedImage(image); // Save the captured image
+    }
+  };
+
   const renderSection = () => {
     switch (visibleSection) {
       case 'malicious':
-        return <MaliciousSection onNavigate={setVisibleSection} />;
+        return <MaliciousSection onNavigate={handleNavigate} imageSrc={capturedImage} />;
       case 'safe':
-        return <SafeSection onNavigate={setVisibleSection} />;
+        return <SafeSection onNavigate={handleNavigate} imageSrc={capturedImage} />;
       default:
-        return <HomeScreen onNavigate={setVisibleSection} />;
+        return <HomeScreen onNavigate={handleNavigate} />;
     }
   };
 
