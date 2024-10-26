@@ -9,8 +9,10 @@ import re
 from urllib.parse import urlparse
 from tld import get_tld
 import cv2
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 loaded_model = joblib.load('random_forest_model.pkl')
 
 def extract_features(url):
