@@ -1,0 +1,77 @@
+.section {
+    background-color: #D3D3D3; /* Light grey background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    text-align: center;
+    margin: 10px;
+  }
+  
+  .malicious .malicious-btn {
+    background-color: #A12E2F; /* Red */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .safe .safe-btn {
+    background-color: #3366FF; /* Blue */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .home-screen .scan-btn {
+    background-color: #6633FF; /* Purple */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .image-placeholder,
+  .camera-icon-placeholder {
+    background-color: #F0F0F0;
+    border: 2px solid #A9A9A9;
+    border-radius: 10px;
+    height: 100px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .placeholder-icon {
+    width: 50px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+  }
+  
+  .actions button {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .report-btn {
+    background-color: #4D4D4D; /* Grey */
+    color: white;
+  }
+  
+  .risky-btn {
+    background-color: #A12E2F; /* Red */
+    color: white;
+  }
+  
+  .open-url-btn {
+    background-color: #3366FF; /* Blue */
+    color: white;
+  }
