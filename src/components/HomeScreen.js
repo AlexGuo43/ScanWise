@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import '../Section.css';
+import axios from 'axios';
 
 function HomeScreen({ onNavigate }) {
   const [imageSrc, setImageSrc] = useState(null); // State to hold captured image
@@ -21,19 +22,15 @@ function HomeScreen({ onNavigate }) {
       });
   };
 
-  // Function to send the captured image to the back end
+  // Function to send the captured image to the local Python server using axios
   const sendImageToBackend = async (imageData) => {
     try {
-      const response = await fetch('https://your-backend-url.com/scan', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: imageData }),
+      const response = await axios.post('http://localhost:5000/scan', {
+        image: imageData,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         if (data.status === 'safe') {
           onNavigate('safe'); // Navigate to the safe screen
         } else if (data.status === 'malicious') {
@@ -47,7 +44,7 @@ function HomeScreen({ onNavigate }) {
     }
   };
 
-  // Capture an image from the video stream and send it to the back end
+  // Capture an image from the video stream and send it to the local server
   const handleScanQRCode = () => {
     const video = videoRef.current;
     if (video && video.srcObject) {
@@ -60,7 +57,7 @@ function HomeScreen({ onNavigate }) {
       const capturedImage = canvas.toDataURL('image/png'); // Convert to image data
       setImageSrc(capturedImage); // Update state with captured image
 
-      // Send the captured image to the back end for QR code analysis
+      // Send the captured image to the local server for QR code analysis
       sendImageToBackend(capturedImage);
 
       // Stop the video stream only if it exists
