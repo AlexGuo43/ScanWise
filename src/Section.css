@@ -1,77 +1,108 @@
+/* Section.css */
+
+/* General Section Styling */
 .section {
-    background-color: #D3D3D3; /* Light grey background */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    text-align: center;
-    margin: 10px;
-  }
-  
-  .malicious .malicious-btn {
-    background-color: #A12E2F; /* Red */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .safe .safe-btn {
-    background-color: #3366FF; /* Blue */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .home-screen .scan-btn {
-    background-color: #6633FF; /* Purple */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .image-placeholder,
-  .camera-icon-placeholder {
-    background-color: #F0F0F0;
-    border: 2px solid #A9A9A9;
-    border-radius: 10px;
-    height: 100px;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .placeholder-icon {
-    width: 50px; /* Adjust as needed */
-    height: 50px; /* Adjust as needed */
-  }
-  
-  .actions button {
-    display: block;
-    margin: 10px auto;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .report-btn {
-    background-color: #4D4D4D; /* Grey */
-    color: white;
-  }
-  
-  .risky-btn {
-    background-color: #A12E2F; /* Red */
-    color: white;
-  }
-  
-  .open-url-btn {
-    background-color: #3366FF; /* Blue */
-    color: white;
-  }
+  width: 100%;
+  /* Full width */
+  height: 100vh;
+  /* Full viewport height */
+  background-color: #D3D3D3;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Center content vertically */
+  align-items: center;
+  /* Center content horizontally */
+  text-align: center;
+  border-radius: 10px;
+}
+
+/* Logo Styling */
+.logo {
+  margin-bottom: 20px;
+}
+
+.logo img {
+  max-width: 80%;
+  /* Ensure the logo scales for mobile */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* Camera Placeholder or Content Box */
+.camera-icon-placeholder,
+.image-placeholder {
+  width: 80%;
+  /* Scale width for mobile */
+  max-width: 300px;
+  /* Limit max width */
+  background-color: #FFFFFF;
+  border: 2px solid #A9A9A9;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styling */
+.actions button {
+  width: 80%;
+  /* Button width responsive for mobile */
+  max-width: 300px;
+  padding: 15px;
+  font-size: 1.1em;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: #6633FF;
+  /* Button color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+  background-color: #5a2ecc;
+  /* Hover effect */
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* Camera container box */
+.camera-icon-placeholder {
+  width: 80%;
+  /* Responsive width */
+  max-width: 300px;
+  /* Maximum width */
+  height: 200px;
+  /* Fixed height */
+  background-color: #FFFFFF;
+  border: 2px solid #A9A9A9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /* Relative positioning for the video */
+  overflow: hidden;
+  /* Hide any overflow content */
+  padding: 0;
+  /* Remove padding */
+  margin: 0 auto;
+  /* Center the box */
+}
