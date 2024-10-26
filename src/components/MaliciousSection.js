@@ -1,5 +1,5 @@
 import React from 'react';
-import './Section.css';
+import '../Section.css';
 
 function MaliciousSection({ onNavigate, imageSrc }) {
   return (
