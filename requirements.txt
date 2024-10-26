@@ -6,5 +6,9 @@ Jinja2==3.1.4
 MarkupSafe==3.0.2
 pillow==11.0.0
 Werkzeug==3.0.6
+pandas==2.2.3
+opencv-python-headless==4.10.0.84
+scikit-learn==1.5.2
+
 
 # pip3 install -r requirements.txt
