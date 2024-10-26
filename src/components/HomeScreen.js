@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../Section.css';
 import axios from 'axios';
 
@@ -19,6 +19,18 @@ function HomeScreen({ onNavigate }) {
         console.error('Error accessing the camera:', error);
       });
   };
+
+  // Automatically trigger the camera feed after the first click
+  useEffect(() => {
+    if (isCameraActive && videoRef.current && !videoRef.current.srcObject) {
+      const clickEvent = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+      });
+      videoRef.current.dispatchEvent(clickEvent);
+    }
+  }, [isCameraActive]);
 
   const sendImageToBackend = async (imageData) => {
     try {
@@ -64,6 +76,15 @@ function HomeScreen({ onNavigate }) {
     }
   };
 
+  // Function to handle manual navigation for testing
+  const handleManualNavigation = (type) => {
+    if (type === 'malicious') {
+      onNavigate('malicious', imageSrc); // Manually navigate to Malicious screen
+    } else if (type === 'safe') {
+      onNavigate('safe', imageSrc); // Manually navigate to Safe screen
+    }
+  };
+
   return (
     <div className="section home-screen">
       <div className="logo">
@@ -98,9 +119,21 @@ function HomeScreen({ onNavigate }) {
             />
           )}
         </div>
+
+        {/* Scan QR Code Button */}
         {isCameraActive && (
           <button onClick={handleScanQRCode} style={{ marginTop: '10px' }}>Scan QR Code</button>
         )}
+
+        {/* Temporary Buttons for Testing Navigation */}
+        <div className="actions" style={{ marginTop: '20px' }}>
+          <button onClick={() => handleManualNavigation('malicious')} style={{ marginBottom: '10px' }}>
+            Simulate Malicious
+          </button>
+          <button onClick={() => handleManualNavigation('safe')}>
+            Simulate Safe
+          </button>
+        </div>
       </div>
     </div>
   );
