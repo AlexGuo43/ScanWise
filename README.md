@@ -1,6 +1,16 @@
-# Getting Started with Create React App
+# QR Code URL Safety Checker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a QR code scanner and URL safety checker built using the OpenCV API and a Random Forest model. The tool captures a QR code using the device’s camera, extracts the embedded URL, and classifies it as either safe or malicious. Users can also report a website if they believe it to be malicious, helping to improve future detection accuracy.
+
+## Features
+- **QR Code Scanning:** Uses OpenCV to capture and decode QR codes containing URLs.
+- **URL Classification:** Employs a Random Forest model to classify URLs as either safe or malicious.
+- **User Reporting:** Users can report URLs they believe to be unsafe, which could be used to further improve detection accuracy.
+
+### Python Libraries
+- `opencv-python`: for capturing and decoding QR codes
+- `sklearn`: for training and using the Random Forest model
+- `numpy`, `pandas`: for data handling and preprocessing
 
 ## Available Scripts
 
