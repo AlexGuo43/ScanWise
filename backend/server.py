@@ -9,12 +9,20 @@ import re
 from urllib.parse import urlparse
 from tld import get_tld
 import cv2
+from pymongo import MongoClient
+from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
 import numpy as np
+import certifi
 
 app = Flask(__name__)
 CORS(app)
 loaded_model = joblib.load('random_forest_model.pkl')
+
+# MongoDB connection URI
+MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb+srv://ashwinsant5:ashwinsant5@scanwise.198et.mongodb.net/?retryWrites=true&w=majority&appName=ScanWise')
+client = MongoClient(MONGODB_URI, tlsAllowInvalidCertificates=True)
+db = client['ScanWise']
 
 def extract_features(url):
     features = {}
@@ -73,22 +81,32 @@ def extract_features(url):
 @app.route('/scan', methods=['POST'])
 @cross_origin()
 def scan_qr_code():
-    data = request.json
-    if not data or 'image' not in data:
-        return jsonify({'status': 'error', 'message': 'No image provided'}), 400
+    try:
+        data = request.json
+        if not data or 'image' not in data:
+            return jsonify({'status': 'error', 'message': 'No image provided'}), 400
 
-    # Decode the Base64 image
-    image_data = data['image'].replace('data:image/png;base64,', '')
-    image = Image.open(BytesIO(base64.b64decode(image_data)))
+        # Decode the Base64 image
+        image_data = data['image'].replace('data:image/png;base64,', '')
+        image = Image.open(BytesIO(base64.b64decode(image_data)))
 
-    # Convert PIL image to OpenCV format
-    open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        # Convert PIL image to OpenCV format
+        open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
-    # Perform QR code analysis
-    result, url = analyze_qr_code(open_cv_image)
+        # Perform QR code analysis
+        result, url = analyze_qr_code(open_cv_image)
 
-    # Return the analysis result
-    return jsonify({'status': result, 'url': url})
+        # Handle case where no URL is detected in the QR code
+        if not url:
+            print("No URL detected from QR code analysis")  # Debugging line
+            return jsonify({'status': 'error', 'message': 'No QR code detected'}), 200
+
+        # Return the analysis result if URL is found
+        return jsonify({'status': result, 'url': url}), 200
+
+    except Exception as e:
+        print(f"Error during /scan processing: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 def analyze_qr_code(image):
     detector = cv2.QRCodeDetector()
@@ -100,5 +118,73 @@ def analyze_qr_code(image):
         return status, data
     else:
         return 'safe', None
+
+# Function to check if a link exists in the database
+def does_safe_link_exist(url):
+    safe_collection = db['safeLinks']
+
+    existing_link_in_safe = safe_collection.find_one({'url': url})
+
+    return existing_link_in_safe is not None
+
+def does_malicious_link_exist(url):
+    malicious_collection = db['maliciousLinks']
+
+    existing_link_in_malicious = malicious_collection.find_one({'url': url})
+
+    return existing_link_in_malicious is not None
+
+# Function to add a link only if it doesn't exist
+def add_link_if_not_exists(url, category):
+    collection = db['maliciousLinks'] if category == 'malicious' else db['safeLinks']
+    if not collection.find_one({'url': url}):
+        collection.insert_one({'url': url, 'category': category})
+        return True
+    return False
+
+@app.route('/checksafe-url', methods=['POST'])
+def checksafe_url():
+    data = request.json
+    url = data.get('url')
+    
+    if url:
+        exists = (does_safe_link_exist(url))
+        return jsonify({'exists': exists}), 200
+    return jsonify({'error': 'URL not provided'}), 400
+
+@app.route('/checkmalicious-url', methods=['POST'])
+def checkmalicious_url():
+    try:
+        data = request.json
+        print("Received data for /checkmalicious-url:", data)  # Debugging line
+
+        if not data:
+            print("No JSON data received")  # Debugging line
+            return jsonify({'error': 'No JSON data received'}), 400
+
+        url = data.get('url')
+        if not url:
+            print("URL field is missing in the JSON data")  # Debugging line
+            return jsonify({'error': 'URL field is missing in the JSON data'}), 400
+
+        exists = (does_malicious_link_exist(url))
+        return jsonify({'exists': exists}), 200
+
+    except Exception as e:
+        print(f"Error processing /checkmalicious-url request: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/report-url', methods=['POST'])
+def report_url():
+    data = request.json
+    url = data.get('url')
+    
+    if url:
+        added = add_link_if_not_exists(url, 'malicious')
+        if added:
+            return jsonify({'message': 'URL reported as malicious successfully'}), 200
+        return jsonify({'message': 'URL already exists in database'}), 200
+    
+    return jsonify({'error': 'URL not provided'}), 400
 
 app.run(host="0.0.0.0", port=5000, debug=True)

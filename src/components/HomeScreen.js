@@ -39,15 +39,63 @@ function HomeScreen({ onNavigate }) {
         {
           image: imageData,
         },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
-
+  
       if (response.status === 200) {
         const data = response.data;
         const url = data.url;
+  
+        // Check if 'url' is valid (not null) before proceeding
+        if (!url) {
+          console.warn('No URL detected in the scanned image.');
+          alert('No QR code detected in the image. Please try again.');
+          return;  // Exit the function early since there's no valid URL
+        }
+  
+        // Proceed to check if the URL exists in the database
+        const checkResponseA = await axios.post(
+          'http://localhost:5000/checkmalicious-url',
+          { url },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (checkResponseA.status === 200 && checkResponseA.data.exists) {
+          // If URL is found in the malicious database, override to malicious
+          onNavigate('malicious', imageData, url);
+          return;
+        }
+  
+        // Check if the URL exists in the safe database if not found in malicious
+        const checkResponseB = await axios.post(
+          'http://localhost:5000/checksafe-url',
+          { url },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (checkResponseB.status === 200 && checkResponseB.data.exists) {
+          // If URL is found in the safe database, override to safe
+          onNavigate('safe', imageData, url);
+          return;
+        }
+  
+        // If the URL is not found in either database, use AI model prediction
         if (data.status === 'safe') {
-          onNavigate('safe', imageData, url); // Pass the image data when navigating
+          onNavigate('safe', imageData, url);
         } else if (data.status === 'malicious') {
-          onNavigate('malicious', imageData, url); // Pass the image data when navigating
+          onNavigate('malicious', imageData, url);
         }
       } else {
         console.error('Failed to scan QR code:', response.statusText);
