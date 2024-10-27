@@ -69,7 +69,8 @@ def extract_features(url):
     return features
 
 # Endpoint to receive and analyze the image
-@app.route('/scan', methods=['OPTIONS', 'POST'])  # Include OPTIONS method
+@app.route('/scan', methods=['POST'])
+@cross_origin()
 def scan_qr_code():
     if request.method == 'OPTIONS':
         # Handling preflight CORS request
@@ -101,5 +102,14 @@ def scan_qr_code():
     response.headers['Access-Control-Allow-Credentials'] = 'true'
     return response
 
-#if __name__ == '__main__':
-app.run(port=5000, debug=True)  # Start the Flask server
+def analyze_qr_code(image):
+    # Dummy analysis function, replace with actual QR analysis
+    # In a real case, you'd decode the QR code and determine if it's safe
+    detector = cv2.QRCodeDetector()
+    data, bbox, _ = detector.detectAndDecode(image)
+    if data and bbox is not None:
+        return 'safe' if loaded_model.predict(pd.DataFrame([extract_features(data)])) == 0 else 'malicious'
+    else:
+        return 'safe'  # or 'malicious'
+
+app.run(host="0.0.0.0", port=5000, debug=True)
