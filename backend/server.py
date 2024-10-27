@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from PIL import Image
 import base64
 from io import BytesIO
@@ -9,10 +9,10 @@ import re
 from urllib.parse import urlparse
 from tld import get_tld
 import cv2
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/scan": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 loaded_model = joblib.load('random_forest_model.pkl')
 
 def extract_features(url):
@@ -69,32 +69,37 @@ def extract_features(url):
     return features
 
 # Endpoint to receive and analyze the image
-@app.route('/scan', methods=['POST'])
+@app.route('/scan', methods=['OPTIONS', 'POST'])  # Include OPTIONS method
 def scan_qr_code():
+    if request.method == 'OPTIONS':
+        # Handling preflight CORS request
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
+
+    # Proceed with the POST request
     data = request.json
     if not data or 'image' not in data:
-        return jsonify({'status': 'error', 'message': 'No image provided'}), 400
+        response = make_response(jsonify({'status': 'error', 'message': 'No image provided'}), 400)
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
 
     # Decode the Base64 image
     image_data = data['image'].replace('data:image/png;base64,', '')
     image = Image.open(BytesIO(base64.b64decode(image_data)))
 
-    # Here you should add QR code analysis logic
-    # For simplicity, let's assume the QR code is either 'safe' or 'malicious'
+    # QR code analysis logic
     result = analyze_qr_code(image)
 
-    # Return the analysis result
-    return jsonify({'status': result})
+    # Return the analysis result with CORS headers
+    response = make_response(jsonify({'status': result}))
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
-def analyze_qr_code(image):
-    # Dummy analysis function, replace with actual QR analysis
-    # In a real case, you'd decode the QR code and determine if it's safe
-    detector = cv2.QRCodeDetector()
-    data, bbox, _ = detector.detectAndDecode(image)
-    if data and bbox is not None:
-        return 'safe' if loaded_model.predict(pd.DataFrame([extract_features(data)])) == 0 else 'malicious'
-    else:
-        return 'safe'  # or 'malicious'
-
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+#if __name__ == '__main__':
+app.run(port=5000, debug=True)  # Start the Flask server

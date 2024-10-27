@@ -34,9 +34,19 @@ function HomeScreen({ onNavigate }) {
 
   const sendImageToBackend = async (imageData) => {
     try {
-      const response = await axios.post('http://localhost:5000/scan', {
-        image: imageData,
-      });
+      const response = await axios.post(
+        'http://localhost:5000/scan',
+        {
+          image: imageData,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true, // Important for handling cookies/credentials
+          crossDomain: true,
+        }
+      );
 
       if (response.status === 200) {
         const data = response.data;
