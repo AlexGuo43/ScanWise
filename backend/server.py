@@ -9,7 +9,7 @@ import re
 from urllib.parse import urlparse
 from tld import get_tld
 import cv2
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
@@ -70,6 +70,7 @@ def extract_features(url):
 
 # Endpoint to receive and analyze the image
 @app.route('/scan', methods=['POST'])
+@cross_origin()
 def scan_qr_code():
     data = request.json
     if not data or 'image' not in data:
@@ -96,5 +97,4 @@ def analyze_qr_code(image):
     else:
         return 'safe'  # or 'malicious'
 
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+app.run(host="0.0.0.0", port=5000, debug=True)
