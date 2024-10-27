@@ -1,1 +1,3 @@
+node_modules/
 random_forest_model.pkl
+.eslintcache

@@ -39,13 +39,6 @@ function HomeScreen({ onNavigate }) {
         {
           image: imageData,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          withCredentials: true, // Important for handling cookies/credentials
-          crossDomain: true,
-        }
       );
 
       if (response.status === 200) {
