@@ -9,7 +9,7 @@ ScanWise is a powerful cybersecurity tool designed to protect users from the inc
 
 ## **Dependencies**
 
-To run ScanWise, make sure to install the necessary dependencies. All required packages are listed in the `requirementsB.txt` file. Use the following command to install them: pip install -r requirements.txt
+To run ScanWise, make sure to install the necessary dependencies. All required packages are listed in the `requirements.txt` file. Use the following command to install them: `pip install -r requirements.txt`
 
 
 ### Python Libraries
@@ -23,7 +23,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Make sure node.js is installed. Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
