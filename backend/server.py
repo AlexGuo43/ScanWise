@@ -85,17 +85,20 @@ def scan_qr_code():
     open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
     # Perform QR code analysis
-    result = analyze_qr_code(open_cv_image)
+    result, url = analyze_qr_code(open_cv_image)
 
     # Return the analysis result
-    return jsonify({'status': result})
+    return jsonify({'status': result, 'url': url})
 
 def analyze_qr_code(image):
     detector = cv2.QRCodeDetector()
     data, bbox, _ = detector.detectAndDecode(image)
     if data and bbox is not None:
-        return 'safe' if loaded_model.predict(pd.DataFrame([extract_features(data)])) == 0 else 'malicious'
+        features = extract_features(data)
+        prediction = loaded_model.predict(pd.DataFrame([features]))[0]
+        status = 'safe' if prediction == 0 else 'malicious'
+        return status, data
     else:
-        return 'safe'
+        return 'safe', None
 
 app.run(host="0.0.0.0", port=5000, debug=True)

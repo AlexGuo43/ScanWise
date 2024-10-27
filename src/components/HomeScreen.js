@@ -43,10 +43,11 @@ function HomeScreen({ onNavigate }) {
 
       if (response.status === 200) {
         const data = response.data;
+        const url = data.url;        
         if (data.status === 'safe') {
-          onNavigate('safe', imageData); // Pass the image data when navigating
+          onNavigate('safe', imageData, url); // Pass the image data when navigating
         } else if (data.status === 'malicious') {
-          onNavigate('malicious', imageData); // Pass the image data when navigating
+          onNavigate('malicious', imageData, url); // Pass the image data when navigating
         }
       } else {
         console.error('Failed to scan QR code:', response.statusText);
@@ -80,11 +81,12 @@ function HomeScreen({ onNavigate }) {
   };
 
   // Function to handle manual navigation for testing
-  const handleManualNavigation = (type) => {
+  const handleManualNavigation = (type, url) => {
     if (type === 'malicious') {
-      onNavigate('malicious', imageSrc); // Manually navigate to Malicious screen
+      console.log(url);
+      onNavigate('malicious', imageSrc, url); // Manually navigate to Malicious screen
     } else if (type === 'safe') {
-      onNavigate('safe', imageSrc); // Manually navigate to Safe screen
+      onNavigate('safe', imageSrc, url); // Manually navigate to Safe screen
     }
   };
 

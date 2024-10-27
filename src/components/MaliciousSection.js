@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Section.css';
 
-function MaliciousSection({ onNavigate, imageSrc }) {
+function MaliciousSection({ onNavigate, imageSrc, url }) {
   return (
     <div className="section malicious">
       <div className="status-header">
@@ -18,7 +18,8 @@ function MaliciousSection({ onNavigate, imageSrc }) {
       </div>
       <div className="actions">
         <button className="report-btn">REPORT</button>
-        <button className="open-url-btn">OPEN URL (RISKY)</button>
+        {console.log(url)}
+        <button className="open-url-btn" onClick={() => window.location.href = url}>OPEN URL (RISKY)</button>
       </div>
     </div>
   );

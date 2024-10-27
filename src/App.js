@@ -7,9 +7,11 @@ import HomeScreen from './components/HomeScreen';
 function App() {
   const [visibleSection, setVisibleSection] = useState('home');
   const [capturedImage, setCapturedImage] = useState(null);
+  const [url, setUrl] = useState(null);
 
-  const handleNavigate = (section, image) => {
+  const handleNavigate = (section, image, url) => {
     setVisibleSection(section);
+    setUrl(url);
     if (image) {
       setCapturedImage(image); // Save the captured image
     }
@@ -18,9 +20,9 @@ function App() {
   const renderSection = () => {
     switch (visibleSection) {
       case 'malicious':
-        return <MaliciousSection onNavigate={handleNavigate} imageSrc={capturedImage} />;
+        return <MaliciousSection onNavigate={handleNavigate} imageSrc={capturedImage} url={url}/>;
       case 'safe':
-        return <SafeSection onNavigate={handleNavigate} imageSrc={capturedImage} />;
+        return <SafeSection onNavigate={handleNavigate} imageSrc={capturedImage} url={url}/>;
       default:
         return <HomeScreen onNavigate={handleNavigate} />;
     }
