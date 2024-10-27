@@ -1,20 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 /* General Section Styling */
+@keyframes backgroundShift {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
 .section {
   width: 100%;
-  /* Full width */
   height: 100vh;
-  /* Full viewport height */
-  background-color: #D3D3D3;
-  padding: 20px;
+  padding: 80px 20px 20px 20px;
+  /* Increased top padding to 40px */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Center content vertically */
   align-items: center;
-  /* Center content horizontally */
   text-align: center;
   border-radius: 10px;
+
+  /* Solid gradient background */
+  background: linear-gradient(180deg, #e4e7eb, #d3d3d3);
+  position: relative;
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(72, 68, 226, 0.2), rgba(72, 68, 226, 0) 70%);
+  opacity: 0.5;
+  /* Increase opacity for visibility */
+  pointer-events: none;
+  z-index: -1;
+  /* Ensure it sits behind the content */
 }
 
 /* Logo Styling */
@@ -90,19 +122,23 @@
   height: 200px;
   /* Fixed height */
   background-color: #FFFFFF;
-  border: 2px solid #A9A9A9;
-  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   /* Relative positioning for the video */
-  overflow: hidden;
-  /* Hide any overflow content */
   padding: 0;
   /* Remove padding */
   margin: 0 auto;
   /* Center the box */
+  border: 2px solid #e0e0e0;
+  /* Subtle light border */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Light shadow */
+  border-radius: 15px;
+  /* Rounded corners */
+  overflow: hidden;
+  /* Keeps the video within the rounded corners */
 }
 
 /* Image Container (Malicious & Safe Screens) */
@@ -201,4 +237,64 @@
 .report-btn:hover,
 .open-url-btn:hover {
   opacity: 0.9;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.scan-qr-button:hover {
+  transform: scale(1.05);
+  /* Slightly larger on hover */
+}
+
+.scan-qr-button:active {
+  transform: scale(0.95);
+  /* Slightly shrink on click */
+}
+
+.scan-qr-button {
+  margin-top: 20px;
+  /*background: linear-gradient(270deg, #4844e2, #9b264b);*/
+  background: linear-gradient(-45deg, #4844e2, #9b264b, #6c63ff);
+  background-size: 200% 200%;
+  animation: gradientFlow 5s ease infinite;
+  color: white;
+  /* Default text color */
+  font-family: 'Poppins', sans-serif;
+  /* Modern font */
+  font-weight: 700;
+  /* Bolder for visibility */
+  letter-spacing: 1.5px;
+  /* Slightly more spacing for modern look */
+  text-transform: uppercase;
+  /* Uppercase for modern look */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  /* Subtle shadow for pop */
+  border: none;
+  border-radius: 50%;
+  /* Makes the button circular */
+  width: 150px;
+  /* Button dimensions */
+  height: 150px;
+  /* Button dimensions */
+  font-size: 18px;
+  /* Larger text size */
+  cursor: pointer;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  /* Subtle button shadow */
+  transition: transform 0.2s;
+  /* Smooth transition on hover */
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1), 0 0 15px rgba(72, 68, 226, 0.5);
+  /* Add a color glow */
 }
