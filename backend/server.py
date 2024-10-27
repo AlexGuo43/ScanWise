@@ -32,7 +32,7 @@ def extract_features(url):
 
     # Abnormal URL check
     hostname = urlparse(url).hostname
-    features['abnormal_url'] = 1 if re.search(hostname, url) else 0
+    features['abnormal_url'] = 1 if hostname and re.search(hostname, url) else 0
 
     # Check for HTTPS
     features['https'] = 1 if urlparse(url).scheme == 'https' else 0
