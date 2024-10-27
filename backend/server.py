@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 from tld import get_tld
 import cv2
 from flask_cors import CORS, cross_origin
+import numpy as np
 
 app = Flask(__name__)
 CORS(app, resources={r"/scan": {"origins": "http://localhost:3000"}}, supports_credentials=True)
@@ -31,7 +32,7 @@ def extract_features(url):
 
     # Abnormal URL check
     hostname = urlparse(url).hostname
-    features['abnormal_url'] = 1 if re.search(hostname, url) else 0
+    features['abnormal_url'] = 1 if hostname and re.search(hostname, url) else 0
 
     # Check for HTTPS
     features['https'] = 1 if urlparse(url).scheme == 'https' else 0
@@ -93,8 +94,11 @@ def scan_qr_code():
     image_data = data['image'].replace('data:image/png;base64,', '')
     image = Image.open(BytesIO(base64.b64decode(image_data)))
 
-    # QR code analysis logic
-    result = analyze_qr_code(image)
+    # Convert PIL image to OpenCV format
+    open_cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+
+    # Perform QR code analysis
+    result = analyze_qr_code(open_cv_image)
 
     # Return the analysis result with CORS headers
     response = make_response(jsonify({'status': result}))
@@ -103,13 +107,11 @@ def scan_qr_code():
     return response
 
 def analyze_qr_code(image):
-    # Dummy analysis function, replace with actual QR analysis
-    # In a real case, you'd decode the QR code and determine if it's safe
     detector = cv2.QRCodeDetector()
     data, bbox, _ = detector.detectAndDecode(image)
     if data and bbox is not None:
         return 'safe' if loaded_model.predict(pd.DataFrame([extract_features(data)])) == 0 else 'malicious'
     else:
-        return 'safe'  # or 'malicious'
+        return 'safe'
 
 app.run(host="0.0.0.0", port=5000, debug=True)
