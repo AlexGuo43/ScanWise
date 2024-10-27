@@ -13,7 +13,7 @@ from flask_cors import CORS, cross_origin
 import numpy as np
 
 app = Flask(__name__)
-CORS(app, resources={r"/scan": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+CORS(app)
 loaded_model = joblib.load('random_forest_model.pkl')
 
 def extract_features(url):
@@ -73,22 +73,9 @@ def extract_features(url):
 @app.route('/scan', methods=['POST'])
 @cross_origin()
 def scan_qr_code():
-    if request.method == 'OPTIONS':
-        # Handling preflight CORS request
-        response = make_response()
-        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        response.headers['Access-Control-Allow-Credentials'] = 'true'
-        return response
-
-    # Proceed with the POST request
     data = request.json
     if not data or 'image' not in data:
-        response = make_response(jsonify({'status': 'error', 'message': 'No image provided'}), 400)
-        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-        response.headers['Access-Control-Allow-Credentials'] = 'true'
-        return response
+        return jsonify({'status': 'error', 'message': 'No image provided'}), 400
 
     # Decode the Base64 image
     image_data = data['image'].replace('data:image/png;base64,', '')
@@ -100,11 +87,8 @@ def scan_qr_code():
     # Perform QR code analysis
     result = analyze_qr_code(open_cv_image)
 
-    # Return the analysis result with CORS headers
-    response = make_response(jsonify({'status': result}))
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-    response.headers['Access-Control-Allow-Credentials'] = 'true'
-    return response
+    # Return the analysis result
+    return jsonify({'status': result})
 
 def analyze_qr_code(image):
     detector = cv2.QRCodeDetector()
