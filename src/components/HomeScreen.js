@@ -80,16 +80,6 @@ function HomeScreen({ onNavigate }) {
     }
   };
 
-  // Function to handle manual navigation for testing
-  const handleManualNavigation = (type, url) => {
-    if (type === 'malicious') {
-      console.log(url);
-      onNavigate('malicious', imageSrc, url); // Manually navigate to Malicious screen
-    } else if (type === 'safe') {
-      onNavigate('safe', imageSrc, url); // Manually navigate to Safe screen
-    }
-  };
-
   return (
     <div className="section home-screen">
       <div className="logo">

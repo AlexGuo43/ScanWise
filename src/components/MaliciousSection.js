@@ -4,6 +4,13 @@ import '../Section.css';
 function MaliciousSection({ onNavigate, imageSrc, url }) {
   return (
     <div className="section malicious">
+      {/* Back Button */}
+      <button 
+          className="back-button" 
+          onClick={() => onNavigate('home')}
+        >
+          Back
+        </button>
       <div className="status-header">
         <h1 className="malicious-title">LIKELY MALICIOUS</h1>
       </div>
