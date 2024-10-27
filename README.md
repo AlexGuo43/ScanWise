@@ -1,11 +1,16 @@
-# ScanWise - QR Code URL Safety Checker
+# ScanWise - QR Code Phishing Detection and URL Safety Checker
 
-This project is a QR code scanner and URL safety checker built using the OpenCV API and a Random Forest model. The tool captures a QR code using the device’s camera, extracts the embedded URL, and classifies it as either safe or malicious. Users can also report a website if they believe it to be malicious, helping to improve future detection accuracy.
+ScanWise is a powerful cybersecurity tool designed to protect users from the increasing threat of QR code phishing. By leveraging computer vision, machine learning, and cloud infrastructure, ScanWise scans QR codes, extracts URLs, and instantly assesses their safety. The system uses a combination of advanced AI analysis and user-driven feedback to continuously improve threat detection, making it a robust solution for safe digital interactions.
 
 ## Features
-- **QR Code Scanning:** Uses OpenCV to capture and decode QR codes containing URLs.
-- **URL Classification:** Employs a Random Forest model to classify URLs as either safe or malicious.
-- **User Reporting:** Users can report URLs they believe to be unsafe, which could be used to further improve detection accuracy.
+- **QR Code Scanning:** ScanWise uses the OpenCV library for real-time QR code detection. Users activate their device’s camera, allowing the tool to capture and decode QR codes seamlessly. The system handles a wide range of QR codes, extracting URLs even under varying lighting conditions or image quality. If the captured image does not contain a QR code, ScanWise provides clear feedback to the user, ensuring a smooth and intuitive scanning experience.
+- **URL Classification:** At the core of ScanWise is a Random Forest machine learning model that has been trained on a diverse dataset of both safe and malicious URLs. Once a URL is extracted from a QR code, the AI model analyzes it based on several security factors, including URL structure, use of special characters, and other known indicators of malicious intent. This classification allows users to receive immediate alerts if a URL is deemed unsafe, helping to prevent phishing and other online threats.
+- **User Reporting:** To enhance the accuracy and adaptability of ScanWise, users are empowered to contribute to the system’s database by reporting URLs they believe to be malicious. Each reported URL is securely stored in a cloud-hosted MongoDB Atlas database, which is referenced during future scans. This user-driven feedback loop allows the system to improve over time, reinforcing AI predictions with real-world user experiences and continuously strengthening its threat detection capabilities.
+
+## **Dependencies**
+
+To run ScanWise, make sure to install the necessary dependencies. All required packages are listed in the `requirementsB.txt` file. Use the following command to install them: pip install -r requirements.txt
+
 
 ### Python Libraries
 - `opencv-python`: for capturing and decoding QR codes
