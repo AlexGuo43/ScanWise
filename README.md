@@ -1,4 +1,4 @@
-# QR Code URL Safety Checker
+# ScanWise - QR Code URL Safety Checker
 
 This project is a QR code scanner and URL safety checker built using the OpenCV API and a Random Forest model. The tool captures a QR code using the device’s camera, extracts the embedded URL, and classifies it as either safe or malicious. Users can also report a website if they believe it to be malicious, helping to improve future detection accuracy.
 
